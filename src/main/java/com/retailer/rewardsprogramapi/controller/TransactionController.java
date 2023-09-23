@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.retailer.rewardsprogramapi.TransactionService;
 import com.retailer.rewardsprogramapi.entity.Transaction;
+import com.retailer.rewardsprogramapi.service.TransactionService;
 
 @RestController
 public class TransactionController {
@@ -22,14 +22,23 @@ public class TransactionController {
 
 	private Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
-	@PostMapping(path = "/transaction")
-	public ResponseEntity<HttpStatus> saveTransaction(@RequestBody List<Transaction> transactionsList) {
+	/**
+	 * Controller method for adding and updating transactions
+	 * 
+	 * @param transactionsList
+	 * @return ResponseEntity
+	 */
+	@PostMapping(path = "/transactions")
+	public ResponseEntity<HttpStatus> saveTransactions(@RequestBody List<Transaction> transactionsList) {
 
-		logger.info("transactionsList = {}", transactionsList);
+		logger.info("saveTransactions() :: transactionsList = {}", transactionsList);
 
-		boolean isSuccess = transactionService.addTransactions(transactionsList);
+		// make the service call to save transactions
+		boolean isSuccess = transactionService.saveTransactions(transactionsList);
 
-		return isSuccess ? ResponseEntity.ok(HttpStatus.OK) : ResponseEntity.ok(HttpStatus.INTERNAL_SERVER_ERROR);
+		logger.info("saveTransactions() :: isSuccess = {}", isSuccess);
+
+		return isSuccess ? ResponseEntity.ok().build() : ResponseEntity.internalServerError().build();
 	}
 
 }
