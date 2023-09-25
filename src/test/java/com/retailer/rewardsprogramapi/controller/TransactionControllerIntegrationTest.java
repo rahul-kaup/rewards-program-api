@@ -1,42 +1,33 @@
-package com.retailer.rewardsprogramapi;
+package com.retailer.rewardsprogramapi.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.retailer.rewardsprogramapi.controller.TransactionController;
 import com.retailer.rewardsprogramapi.entity.Transaction;
 import com.retailer.rewardsprogramapi.repository.TransactionRepository;
+import com.retailer.rewardsprogramapi.util.TestUtil;
 
-@SpringBootTest
-class TransactionsAPIIntegrationTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class TransactionControllerIntegrationTest {
 
 	@Autowired
-	TransactionController transactionController;
+	TestRestTemplate testRestTemplate;
 
 	@Autowired
 	TransactionRepository transactionRepository;
-
+	
 	@Autowired
-	ObjectMapper jsonMapper;
-
-	@Test
-	void contextLoads() {
-		assertThat(transactionController).isNotNull();
-	}
+	TestUtil testUtil;
 
 	/**
 	 * Tests if list of transactions are successfully saved to the database
@@ -50,10 +41,11 @@ class TransactionsAPIIntegrationTest {
 		assertEquals(0, transactionRepository.count());
 
 		// get transactions from json
-		List<Transaction> expectedTransactions = getTransactions("transactions");
+		List<Transaction> expectedTransactions = testUtil.getTransactions("transactions-valid");
 
 		// make controller call to add transactions to db
-		ResponseEntity<HttpStatus> response = transactionController.saveTransactions(expectedTransactions);
+		ResponseEntity<HttpStatus> response = testRestTemplate.postForEntity("/transactions", expectedTransactions,
+				HttpStatus.class);
 
 		// fetch transactions from db
 		List<Transaction> actualTransactions = (List<Transaction>) transactionRepository.findAll();
@@ -78,10 +70,11 @@ class TransactionsAPIIntegrationTest {
 		assertEquals(0, transactionRepository.count());
 
 		// get transactions from json
-		List<Transaction> expectedTransactions = getTransactions("transactions");
+		List<Transaction> expectedTransactions = testUtil.getTransactions("transactions-valid");
 
 		// make controller call to add transactions to db
-		transactionController.saveTransactions(expectedTransactions);
+		ResponseEntity<HttpStatus> response = testRestTemplate.postForEntity("/transactions", expectedTransactions,
+				HttpStatus.class);
 
 		// fetch transactions from db
 		List<Transaction> actualTransactions = (List<Transaction>) transactionRepository.findAll();
@@ -98,7 +91,7 @@ class TransactionsAPIIntegrationTest {
 		expectedTransaction.setTransactionAmount(199.99F);
 
 		// make controller call to update transaction
-		ResponseEntity<HttpStatus> response = transactionController.saveTransactions(List.of(expectedTransaction));
+		response = testRestTemplate.postForEntity("/transactions", List.of(expectedTransaction), HttpStatus.class);
 
 		// validate transactions from db
 		assertEquals(3, transactionRepository.count());
@@ -122,10 +115,11 @@ class TransactionsAPIIntegrationTest {
 		assertEquals(0, transactionRepository.count());
 
 		// get transactions from json
-		List<Transaction> expectedTransactions = getTransactions("transactions-invalid");
+		List<Transaction> expectedTransactions = testUtil.getTransactions("transactions-invalid");
 
 		// make controller call to add transactions to db
-		ResponseEntity<HttpStatus> response = transactionController.saveTransactions(expectedTransactions);
+		ResponseEntity<HttpStatus> response = testRestTemplate.postForEntity("/transactions", expectedTransactions,
+				HttpStatus.class);
 
 		// validate transactions from db
 		assertEquals(0, transactionRepository.count());
@@ -140,18 +134,6 @@ class TransactionsAPIIntegrationTest {
 		transactionRepository.deleteAll();
 	}
 
-	private List<Transaction> getTransactions(String fileName) throws IOException {
-		// read transactions json from test data file
-		String transactionsJson = Files
-				.readString(new ClassPathResource("data/" + fileName + ".json").getFile().toPath());
-
-		// convert to pojo
-		List<Transaction> transactionsList = jsonMapper.readValue(transactionsJson,
-				new TypeReference<List<Transaction>>() {
-				});
-
-		return transactionsList;
-
-	}
+	
 
 }
