@@ -1,0 +1,20 @@
+[
+	{
+		"transactionId": "1",
+		"customerId": "1",
+		"transactionDate": "20230922",
+		"transactionAmount": "100"
+	},
+	{
+		"transactionId": "2",
+		"customerId": "1",
+		"transactionDate": "20230921",
+		"transactionAmount": "99.99"
+	},
+	{
+		"transactionId": "3",
+		"customerId": "2",
+		"transactionDate": "20230921",
+		"transactionAmount": "199.99"
+	}
+]
