@@ -1,0 +1,14 @@
+[
+	{
+		"ruleId": "1",
+		"lowerBound": "51",
+		"upperBound": "100",
+		"rewardRate": "1"
+	},
+	{
+		"ruleId": "2",
+		"lowerBound": "101",
+		"upperBound": null,
+		"rewardRate": "2"
+	}
+]
