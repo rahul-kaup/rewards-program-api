@@ -16,5 +16,11 @@
 		"customerId": "2",
 		"transactionDate": "20230921",
 		"transactionAmount": "199.99"
+	},
+	{
+		"transactionId": "4",
+		"customerId": "1",
+		"transactionDate": "20230923",
+		"transactionAmount": "50"
 	}
 ]

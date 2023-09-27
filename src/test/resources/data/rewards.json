@@ -1,0 +1,14 @@
+[
+	{
+		"customerId": "1",
+		"rewardYear": "2023",
+		"rewardMonth": "9",
+		"points": "99"
+	},
+	{
+		"customerId": "2",
+		"rewardYear": "2023",
+		"rewardMonth": "9",
+		"points": "248"
+	}
+]

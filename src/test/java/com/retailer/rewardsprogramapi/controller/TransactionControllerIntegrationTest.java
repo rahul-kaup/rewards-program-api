@@ -12,12 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.retailer.rewardsprogramapi.entity.Transaction;
 import com.retailer.rewardsprogramapi.repository.TransactionRepository;
 import com.retailer.rewardsprogramapi.util.TestUtil;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class TransactionControllerIntegrationTest {
 
 	@Autowired
@@ -51,7 +53,7 @@ class TransactionControllerIntegrationTest {
 		List<Transaction> actualTransactions = (List<Transaction>) transactionRepository.findAll();
 
 		// validate transactions from db
-		assertEquals(3, transactionRepository.count());
+		assertEquals(4, transactionRepository.count());
 		assertEquals(expectedTransactions, actualTransactions);
 
 		// validate http response
@@ -80,7 +82,7 @@ class TransactionControllerIntegrationTest {
 		List<Transaction> actualTransactions = (List<Transaction>) transactionRepository.findAll();
 
 		// validate transactions from db
-		assertEquals(3, transactionRepository.count());
+		assertEquals(4, transactionRepository.count());
 		assertEquals(expectedTransactions, actualTransactions);
 
 		// create transaction to update
@@ -94,7 +96,7 @@ class TransactionControllerIntegrationTest {
 		response = testRestTemplate.postForEntity("/transactions", List.of(expectedTransaction), HttpStatus.class);
 
 		// validate transactions from db
-		assertEquals(3, transactionRepository.count());
+		assertEquals(4, transactionRepository.count());
 		Transaction actualTransaction = transactionRepository.findById(Long.valueOf(1)).get();
 		assertEquals(expectedTransaction, actualTransaction);
 
