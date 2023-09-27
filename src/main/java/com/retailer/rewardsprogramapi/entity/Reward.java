@@ -18,10 +18,10 @@ public class Reward {
 	private Long customerId;
 
 	@Id
-	private Integer year;
+	private Integer rewardYear;
 
 	@Id
-	private Integer month;
+	private Integer rewardMonth;
 
 	private Integer points;
 

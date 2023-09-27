@@ -1,9 +1,9 @@
-# logging
+# logging config
 logging:
   level:
     root: info
 
-# database
+# database config
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -11,6 +11,10 @@ spring:
     username: root
     password: root
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
     show-sql: true
+  sql:
+    init: 
+      mode: always

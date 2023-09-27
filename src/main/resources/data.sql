@@ -1,0 +1,2 @@
+INSERT INTO `rewards_program_db`.`rules_tbl` (`rule_id`, `lower_bound`, `upper_bound`, `reward_rate`) VALUES ('1', '51', '100', '1');
+INSERT INTO `rewards_program_db`.`rules_tbl` (`rule_id`, `lower_bound`, `upper_bound`, `reward_rate`) VALUES ('2', '101', null, '2');

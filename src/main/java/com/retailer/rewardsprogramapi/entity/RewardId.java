@@ -8,6 +8,6 @@ import lombok.Data;
 public class RewardId implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long customerId;
-	private Integer year;
-	private Integer month;
+	private Integer rewardYear;
+	private Integer rewardMonth;
 }

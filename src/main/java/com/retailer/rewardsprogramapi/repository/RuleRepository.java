@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.retailer.rewardsprogramapi.entity.Rule;
 
-public interface RulesRepository extends CrudRepository<Rule, Long> {
+public interface RuleRepository extends CrudRepository<Rule, Long> {
 
 }

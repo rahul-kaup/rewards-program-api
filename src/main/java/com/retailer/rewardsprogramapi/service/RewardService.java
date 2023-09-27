@@ -1,5 +1,6 @@
 package com.retailer.rewardsprogramapi.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -15,19 +16,19 @@ import com.retailer.rewardsprogramapi.entity.Reward;
 import com.retailer.rewardsprogramapi.entity.Rule;
 import com.retailer.rewardsprogramapi.entity.Transaction;
 import com.retailer.rewardsprogramapi.repository.RewardRepository;
-import com.retailer.rewardsprogramapi.repository.RulesRepository;
+import com.retailer.rewardsprogramapi.repository.RuleRepository;
 import com.retailer.rewardsprogramapi.repository.TransactionRepository;
 
 @Service
-public class RewardsService {
+public class RewardService {
 
-	Logger logger = LoggerFactory.getLogger(RewardsService.class);
+	Logger logger = LoggerFactory.getLogger(RewardService.class);
 
 	@Autowired
 	private TransactionRepository transactionRepository;
 
 	@Autowired
-	private RulesRepository rulesRepository;
+	private RuleRepository ruleRepository;
 
 	@Autowired
 	private RewardRepository rewardRepository;
@@ -37,8 +38,9 @@ public class RewardsService {
 		try {
 
 			// fetch transactions and rules from db
-			List<Rule> rules = (List<Rule>) rulesRepository.findAll();
 			List<Transaction> transactions = (List<Transaction>) transactionRepository.findAll();
+			List<Rule> rules = (List<Rule>) ruleRepository.findAll();
+
 			if (transactions.isEmpty() || rules.isEmpty()) {
 				logger.warn("transactions or rules not available for reward computation");
 				return false;
@@ -59,7 +61,7 @@ public class RewardsService {
 		return true;
 	}
 
-	public Collection<Reward> computeRewards(List<Transaction> transactions, List<Rule> rules) {
+	public List<Reward> computeRewards(List<Transaction> transactions, List<Rule> rules) {
 
 		Map<RewardKey, Reward> rewardsMap = new HashMap<>();
 
@@ -99,7 +101,7 @@ public class RewardsService {
 			}
 		}
 
-		return rewardsMap.values();
+		return new ArrayList<Reward>(rewardsMap.values());
 	}
 
 	public Iterable<Reward> getRewards() {

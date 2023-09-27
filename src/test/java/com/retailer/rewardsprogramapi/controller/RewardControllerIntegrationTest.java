@@ -12,17 +12,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.retailer.rewardsprogramapi.entity.Reward;
 import com.retailer.rewardsprogramapi.entity.Rule;
 import com.retailer.rewardsprogramapi.entity.Transaction;
 import com.retailer.rewardsprogramapi.repository.RewardRepository;
-import com.retailer.rewardsprogramapi.repository.RulesRepository;
+import com.retailer.rewardsprogramapi.repository.RuleRepository;
 import com.retailer.rewardsprogramapi.repository.TransactionRepository;
 import com.retailer.rewardsprogramapi.util.TestUtil;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class RewardsComputationControllerIntegrationTest {
+@ActiveProfiles("test")
+class RewardControllerIntegrationTest {
 
 	@Autowired
 	TestRestTemplate testRestTemplate;
@@ -31,7 +33,7 @@ class RewardsComputationControllerIntegrationTest {
 	TransactionRepository transactionRepository;
 
 	@Autowired
-	RulesRepository rulesRepository;
+	RuleRepository rulesRepository;
 
 	@Autowired
 	RewardRepository rewardRepository;
@@ -61,8 +63,7 @@ class RewardsComputationControllerIntegrationTest {
 		rulesRepository.saveAll(rules);
 
 		// make api call to compute rewards
-		ResponseEntity<HttpStatus> response = testRestTemplate.postForEntity("/rewards/compute", null,
-				HttpStatus.class);
+		ResponseEntity<HttpStatus> response = testRestTemplate.postForEntity("/rewards", null, HttpStatus.class);
 
 		// validate http response
 		assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -87,11 +88,33 @@ class RewardsComputationControllerIntegrationTest {
 		assertEquals(0, rulesRepository.count());
 
 		// make api call to compute rewards without adding transactions or rules
-		ResponseEntity<HttpStatus> response = testRestTemplate.postForEntity("/rewards/compute", null,
-				HttpStatus.class);
+		ResponseEntity<HttpStatus> response = testRestTemplate.postForEntity("/rewards", null, HttpStatus.class);
 
 		// validate http response
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+	}
+
+	@Test
+	void testGetRewards() throws IOException {
+
+		// verify db is empty
+		assertEquals(0, rewardRepository.count());
+
+		// add rewards to db
+		List<Reward> rewards = testUtil.getRewards("rewards");
+		rewardRepository.saveAll(rewards);
+
+		// make api call to get rewards from db
+		ResponseEntity<String> response = testRestTemplate.getForEntity("/rewards", String.class);
+
+		// validate http response
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+
+		// validate response body
+		assertEquals(
+				"[{\"customerId\":1,\"rewardYear\":2023,\"rewardMonth\":9,\"points\":99},{\"customerId\":2,\"rewardYear\":2023,\"rewardMonth\":9,\"points\":248}]",
+				response.getBody());
+
 	}
 
 	@BeforeEach

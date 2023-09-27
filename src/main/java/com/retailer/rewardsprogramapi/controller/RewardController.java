@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.retailer.rewardsprogramapi.entity.Reward;
-import com.retailer.rewardsprogramapi.service.RewardsService;
+import com.retailer.rewardsprogramapi.service.RewardService;
 
 @RestController
-public class RewardsController {
+public class RewardController {
 
 	@Autowired
-	private RewardsService rewardsService;
+	private RewardService rewardService;
 
-	private Logger logger = LoggerFactory.getLogger(RewardsController.class);
+	private Logger logger = LoggerFactory.getLogger(RewardController.class);
 
 	/**
 	 * Controller method to update rewards
@@ -33,7 +33,7 @@ public class RewardsController {
 		logger.info("updateRewards() :: begin");
 
 		// make the service call to update reward points
-		boolean isSuccess = rewardsService.updateRewards();
+		boolean isSuccess = rewardService.updateRewards();
 
 		logger.info("updateRewards() :: end");
 
@@ -51,7 +51,7 @@ public class RewardsController {
 		logger.info("getRewards() :: begin");
 
 		// make the service call to update reward points
-		Iterable<Reward> rewards = rewardsService.getRewards();
+		Iterable<Reward> rewards = rewardService.getRewards();
 
 		logger.info("getRewards() :: end");
 
