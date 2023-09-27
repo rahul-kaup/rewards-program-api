@@ -1,5 +1,7 @@
 package com.retailer.rewardsprogramapi.controller;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.retailer.rewardsprogramapi.entity.Reward;
 import com.retailer.rewardsprogramapi.service.RewardService;
+import com.retailer.rewardsprogramapi.vo.RewardVO;
 
 @RestController
 public class RewardController {
@@ -46,12 +48,12 @@ public class RewardController {
 	 * @return ResponseEntity
 	 */
 	@GetMapping(path = "/rewards")
-	public ResponseEntity<Iterable<Reward>> getRewards() {
+	public ResponseEntity<Map<Long, RewardVO>> getRewards() {
 
 		logger.info("getRewards() :: begin");
 
 		// make the service call to update reward points
-		Iterable<Reward> rewards = rewardService.getRewards();
+		Map<Long, RewardVO> rewards = rewardService.getRewards();
 
 		logger.info("getRewards() :: end");
 

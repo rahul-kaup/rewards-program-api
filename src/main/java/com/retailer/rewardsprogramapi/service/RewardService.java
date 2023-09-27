@@ -2,9 +2,11 @@ package com.retailer.rewardsprogramapi.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,7 @@ import com.retailer.rewardsprogramapi.entity.Transaction;
 import com.retailer.rewardsprogramapi.repository.RewardRepository;
 import com.retailer.rewardsprogramapi.repository.RuleRepository;
 import com.retailer.rewardsprogramapi.repository.TransactionRepository;
+import com.retailer.rewardsprogramapi.vo.RewardVO;
 
 @Service
 public class RewardService {
@@ -101,12 +104,35 @@ public class RewardService {
 			}
 		}
 
-		return new ArrayList<Reward>(rewardsMap.values());
+		return new ArrayList<>(rewardsMap.values());
 	}
 
-	public Iterable<Reward> getRewards() {
+	public Map<Long, RewardVO> getRewards() {
 
-		return rewardRepository.findAll();
+		Map<Long, RewardVO> rewardMap = new HashMap<>();
+
+		Iterable<Reward> rewards = rewardRepository.findAll();
+
+		// iterate rewards
+		for (Reward reward : rewards) {
+			Long customerId = reward.getCustomerId();
+
+			RewardVO rewardVO = rewardMap.getOrDefault(customerId,
+					new RewardVO(new TreeMap<>(Comparator.reverseOrder()), 0));
+
+			// add monthly points
+			rewardVO.getPoints().put(reward.getRewardYear() + "-" + reward.getRewardMonth(), reward.getPoints());
+
+			// increment total
+			rewardVO.setTotal(rewardVO.getTotal() + reward.getPoints());
+
+			// update the map
+			rewardMap.put(customerId, rewardVO);
+
+		}
+
+		return rewardMap;
+
 	}
 
 }

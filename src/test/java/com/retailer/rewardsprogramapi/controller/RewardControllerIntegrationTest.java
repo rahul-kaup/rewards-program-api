@@ -112,7 +112,7 @@ class RewardControllerIntegrationTest {
 
 		// validate response body
 		assertEquals(
-				"[{\"customerId\":1,\"rewardYear\":2023,\"rewardMonth\":9,\"points\":99},{\"customerId\":2,\"rewardYear\":2023,\"rewardMonth\":9,\"points\":248}]",
+				"{\"1\":{\"points\":{\"2023-9\":99},\"total\":99},\"2\":{\"points\":{\"2023-9\":248},\"total\":248}}",
 				response.getBody());
 
 	}

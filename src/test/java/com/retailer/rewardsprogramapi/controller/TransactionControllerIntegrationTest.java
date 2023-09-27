@@ -53,7 +53,7 @@ class TransactionControllerIntegrationTest {
 		List<Transaction> actualTransactions = (List<Transaction>) transactionRepository.findAll();
 
 		// validate transactions from db
-		assertEquals(3, transactionRepository.count());
+		assertEquals(4, transactionRepository.count());
 		assertEquals(expectedTransactions, actualTransactions);
 
 		// validate http response
@@ -82,7 +82,7 @@ class TransactionControllerIntegrationTest {
 		List<Transaction> actualTransactions = (List<Transaction>) transactionRepository.findAll();
 
 		// validate transactions from db
-		assertEquals(3, transactionRepository.count());
+		assertEquals(4, transactionRepository.count());
 		assertEquals(expectedTransactions, actualTransactions);
 
 		// create transaction to update
@@ -96,7 +96,7 @@ class TransactionControllerIntegrationTest {
 		response = testRestTemplate.postForEntity("/transactions", List.of(expectedTransaction), HttpStatus.class);
 
 		// validate transactions from db
-		assertEquals(3, transactionRepository.count());
+		assertEquals(4, transactionRepository.count());
 		Transaction actualTransaction = transactionRepository.findById(Long.valueOf(1)).get();
 		assertEquals(expectedTransaction, actualTransaction);
 
